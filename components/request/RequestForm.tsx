@@ -1,4 +1,4 @@
-// Request form — client component, submits directly to Google Apps Script Web App
+// Request form — client component, submits to /api/contact (server forwards to Google Apps Script)
 'use client';
 
 import { useState } from 'react';
@@ -25,25 +25,23 @@ export function RequestForm() {
       message:  fd.get('message'),
     };
 
-    const scriptUrl = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL;
-    if (!scriptUrl) {
-      setStatus('error');
-      setErrorMsg('설정 오류입니다. 관리자에게 문의해주세요.');
-      return;
-    }
-
     try {
-      await fetch(scriptUrl, {
+      const res = await fetch('/api/contact', {
         method: 'POST',
-        headers: { 'Content-Type': 'text/plain' },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
-        mode: 'no-cors',
       });
 
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error ?? '전송에 실패했습니다.');
+      }
+
       setStatus('success');
-    } catch {
+    } catch (err) {
       setStatus('error');
-      setErrorMsg('전송에 실패했습니다. 잠시 후 다시 시도해주세요.');
+      setErrorMsg(err instanceof Error ? err.message : '전송에 실패했습니다. 잠시 후 다시 시도해주세요.');
     }
   }
 
