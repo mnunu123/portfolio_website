@@ -19,8 +19,7 @@ export function PainPointSection() {
             시간이 가장 많이 드는 건<br className="hidden sm:block" /> 디자인이 아니라 정리입니다
           </h2>
           <p className="text-base sm:text-lg text-gray-500 leading-relaxed">
-            어떤 경험을 넣어야 할지, 어떤 회사에 맞춰 바꿔야 할지,
-            어디에 흩어진 자료를 모아야 할지.
+            어떤 경험을 넣어야 할지, 어떤 회사에 맞춰 바꿔야 할지, 어디에 흩어진 자료를 모아야 할지.<br />
             포트폴리오는 만들기보다 정리하는 과정이 더 오래 걸립니다.
           </p>
         </div>
