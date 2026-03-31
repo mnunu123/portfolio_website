@@ -4,7 +4,7 @@ import Link from 'next/link';
 const CARDS = [
   {
     title: '흩어진 자료 정리',
-    body:  '여러 곳에 있는 경험을 한 번에 모읍니다.',
+    body:  '카톡, GPT, 제미나이, 메모에 흩어진 기록까지 모아, 포트폴리오에 들어갈 경험으로 다시 정리합니다.',
   },
   {
     title: '직군·기업 맞춤 재구성',
