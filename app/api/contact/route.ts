@@ -11,15 +11,12 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const res = await fetch(scriptUrl, {
+    await fetch(scriptUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
+      redirect: 'follow',
     });
-
-    if (!res.ok) {
-      throw new Error(`Apps Script returned ${res.status}`);
-    }
 
     return NextResponse.json({ success: true });
   } catch (err) {
