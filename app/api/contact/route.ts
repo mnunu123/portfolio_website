@@ -5,13 +5,14 @@ interface ContactPayload {
   name: string;
   email: string;
   template: string;
-  role: string;
-  message: string;
+  role?: string;
+  message?: string;
 }
 
 export async function POST(req: NextRequest) {
   const scriptUrl = process.env.GOOGLE_SCRIPT_URL;
   if (!scriptUrl) {
+    console.error('[contact] GOOGLE_SCRIPT_URL is not set');
     return NextResponse.json({ error: 'GOOGLE_SCRIPT_URL is not configured' }, { status: 500 });
   }
 
@@ -28,26 +29,23 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const res = await fetch(scriptUrl, {
+    await fetch(scriptUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        name:     payload.name,
-        email:    payload.email,
-        template: payload.template,
-        role:     payload.role ?? '',
-        message:  payload.message ?? '',
+        name,
+        email,
+        template,
+        role:    payload.role ?? '',
+        message: payload.message ?? '',
       }),
       redirect: 'follow',
     });
 
-    if (!res.ok) {
-      throw new Error(`Apps Script responded with ${res.status}`);
-    }
-
+    // Apps Script 응답 상태와 무관하게 요청이 전달됐으면 성공으로 처리
     return NextResponse.json({ success: true });
   } catch (err) {
-    console.error('[contact] Apps Script fetch failed:', err);
+    console.error('[contact] fetch to Apps Script failed:', err);
     return NextResponse.json({ error: '전송에 실패했습니다. 잠시 후 다시 시도해주세요.' }, { status: 502 });
   }
 }
