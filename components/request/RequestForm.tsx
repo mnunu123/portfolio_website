@@ -1,4 +1,4 @@
-// Request form — client component, submits to /api/contact which forwards to Google Sheets
+// Request form — client component, submits directly to Google Apps Script Web App
 'use client';
 
 import { useState } from 'react';
@@ -25,14 +25,21 @@ export function RequestForm() {
       message:  fd.get('message'),
     };
 
+    const scriptUrl = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL;
+    if (!scriptUrl) {
+      setStatus('error');
+      setErrorMsg('설정 오류입니다. 관리자에게 문의해주세요.');
+      return;
+    }
+
     try {
-      const res = await fetch('/api/contact', {
+      await fetch(scriptUrl, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify(payload),
+        mode: 'no-cors',
       });
 
-      if (!res.ok) throw new Error();
       setStatus('success');
     } catch {
       setStatus('error');
